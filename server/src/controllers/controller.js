@@ -36,6 +36,28 @@ const controller = {
             },
             data: applicants
         })
+    },
+    profession: async (req, res) => {
+        const id = req.params.id
+        const profession = await db.Professions.findByPk(id)
+        return res.status(200).json({
+            meta: {
+                url: req.protocol + '://' + req.get('host') + req.url,
+                status: 200
+            },
+            data: profession
+        })
+    },
+    professions: async (req, res) => {
+        const professions = await db.Professions.findAll()
+        return res.status(200).json({
+            meta: {
+                total: applicants.length,
+                url: req.protocol + '://' + req.get('host') + req.url,
+                status: 200
+            },
+            data: professions
+        })
     }
 }
 
