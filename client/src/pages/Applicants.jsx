@@ -8,7 +8,7 @@ function Applicants() {
             <div className="bg-white  shadow-lg rounded-lg lg:m-2 md:m-0 lg:w-[30%] md:w-[50%] w-[100%]">
                 <div className="text-center border-b py-5">
                     <img src="/img/foto1.jpg" className="h-[100px] mb-4 rounded-full mx-auto" alt="" />
-                    <h4 className="font-bold text-gray-600">Gloria Medina</h4>
+                    <h4 className="font-bold text-gray-600">Gloria Medinaa</h4>
                     <p className="text-gray-600">Administrador</p>
                 </div>
                 <div className="flex justify-between py-5 px-10">
