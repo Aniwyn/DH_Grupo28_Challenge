@@ -3,7 +3,6 @@ let db = require('../../database/models')
 const controller = {
     applicant: async (req, res) => {
         const id = req.params.id
-        console.log("EL ID ESSSS",id)
         const applicant = await db.Aspirante.findByPk(
             id,
             {
@@ -25,7 +24,7 @@ const controller = {
         const applicants = await db.Aspirante.findAll({
             include: [
                 // {association: 'genders'},
-                // {association: 'profesiones'}
+                {association: 'profesiones'}
             ]
         })
         return res.status(200).json({
@@ -39,7 +38,15 @@ const controller = {
     },
     profession: async (req, res) => {
         const id = req.params.id
-        const profession = await db.Profesiones.findByPk(id)
+        const profession = await db.Profesiones.findByPk(
+            id,
+            {
+                include: [
+                    // {association: 'genders'},
+                    {association: 'aspirantes'}
+                ]
+            }
+        )
         return res.status(200).json({
             meta: {
                 url: req.protocol + '://' + req.get('host') + req.url,
@@ -49,7 +56,14 @@ const controller = {
         })
     },
     professions: async (req, res) => {
-        const professions = await db.Profesiones.findAll()
+        const professions = await db.Profesiones.findAll(
+            {
+                include: [
+                    // {association: 'genders'},
+                    {association: 'aspirantes'}
+                ]
+            }
+        )
         return res.status(200).json({
             meta: {
                 total: professions.length,
