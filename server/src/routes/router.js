@@ -3,9 +3,17 @@ const router = express.Router();
 
 const controller = require('../controllers/controller');
 
-router.use('/applicants', controller.applicants);
-router.use('/applicant/:id', controller.applicant);
-router.use('/professions', controller.professions);
-router.use('/profession/:id', controller.profession);
+router.get('/applicants', controller.applicants);
+
+router.get('/applicant/:id', controller.applicant);
+
+router.post('/applicant/', controller.addApplicant); // Create
+router.post('/updateApplicant/:id', controller.updateApplicant); // Update
+router.post('/deleteApplicant/:id', controller.removeApplicant); // Delete
+// router.post('/updateApplicant/:id', controller.applicant);
+
+
+router.get('/professions', controller.professions);
+router.get('/profession/:id', controller.profession);
 
 module.exports=router
