@@ -1,8 +1,8 @@
 /* VARIABLE DECLARATION */
 const express = require("express");
-
 const cors = require('cors')
 const app = express();
+const routes = require("./routes/router.js")
 
 /* REQUIRES */
 require('dotenv').config({path: `${__dirname}/config.env` });
@@ -12,8 +12,11 @@ app.use(express.static("public"));
 app.use(cors({
     origin: process.env.CLIENT,
 }));
+/* ROUTING */
+app.use("/api/",routes)
+
 
 /* SERVER LISTEN */
-app.listen(process.env.PORT, () => {
+app.listen(4000, () => {
     console.log(`[server] corriendo en el puerto ${process.env.PORT} (http://localhost:${process.env.PORT}/)`);
 })

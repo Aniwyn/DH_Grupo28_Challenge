@@ -16,7 +16,7 @@ const applicants = sequelize.define('applicants', {
     allowNull: false
   },
   gender: {
-    type: DataTypes.,
+    type: DataTypes.STRING(30),
     allowNull: false
   },
   birthday: {

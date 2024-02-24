@@ -3,29 +3,29 @@ let db = require('../../database/models')
 const controller = {
     applicant: async (req, res) => {
         const id = req.params.id
-        const applicant = await db.Applicant.findByPk(
+        console.log("EL ID ESSSS",id)
+        const applicant = await db.Aspirante.findByPk(
             id,
             {
                 include: [
-                    {association: 'genders'},
-                    {association: 'professiones'}
-                ]
-            }
-            
-        )
+                        {association: 'profesiones'}
+                    ]
+                }
+                
+                )
         return res.status(200).json({
             meta: {
                 url: req.protocol + '://' + req.get('host') + req.url,
-                status: 200
+                status: 200,
             },
-            data: applicant
+            data: applicant,
         })
     },
     applicants: async (req, res) => {
-        const applicants = await db.Applicant.findAll({
+        const applicants = await db.Aspirante.findAll({
             include: [
-                {association: 'genders'},
-                {association: 'professiones'}
+                // {association: 'genders'},
+                // {association: 'profesiones'}
             ]
         })
         return res.status(200).json({
@@ -39,7 +39,7 @@ const controller = {
     },
     profession: async (req, res) => {
         const id = req.params.id
-        const profession = await db.Professions.findByPk(id)
+        const profession = await db.Profesiones.findByPk(id)
         return res.status(200).json({
             meta: {
                 url: req.protocol + '://' + req.get('host') + req.url,
@@ -49,10 +49,10 @@ const controller = {
         })
     },
     professions: async (req, res) => {
-        const professions = await db.Professions.findAll()
+        const professions = await db.Profesiones.findAll()
         return res.status(200).json({
             meta: {
-                total: applicants.length,
+                total: professions.length,
                 url: req.protocol + '://' + req.get('host') + req.url,
                 status: 200
             },
