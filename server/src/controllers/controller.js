@@ -3,11 +3,11 @@ let db = require('../../database/models')
 const controller = {
     applicant: async (req, res) => {
         const id = req.params.id
-        const applicant = await db.Aspirante.findByPk(
+        const applicant = await db.Applicants.findByPk(
             id,
             {
                 include: [
-                        {association: 'profesiones'}
+                        {association: 'professions'}
                     ]
                 }
                 
@@ -99,37 +99,30 @@ const controller = {
     }, 
     addApplicantA: async (req, res) => {
         const datosFormulario = req.body
-        console.log("DATOS SON",datosFormulario, req.file)
-        let productImage;
-        if (req.file) {
-            productImage = req.file.filename;
-        } else {
-            productImage = "producto.jpg";
-        }
-        const AspiranteNuevo = await db.Aspirante.create({
+        console.log("DATOS SON",datosFormulario)
+        const AspiranteNuevo = await db.Applicants.create({
             dni:datosFormulario.dni,
-            nombre: datosFormulario.nombre,
-            apellido: datosFormulario.apellido,
-            genero: datosFormulario.genero,
-            fechaNacimiento: datosFormulario.fechaNacimiento,
+            name: datosFormulario.name,
+            last_name: datosFormulario.last_name,
+            gender: datosFormulario.gender,
+            birth_date: datosFormulario.birth_date,
             email: datosFormulario.email,
-            telefono: datosFormulario.telefono,
-            urlLinkedin: datosFormulario.urlLinkedin,
-            imagen: productImage,
-            createdAt: new Date(),
-            updatedAt: new Date(),
+            phone: datosFormulario.phone,
+            url_linkedin: datosFormulario.url_linkedin,
+            gender_id: datosFormulario.gender_id,
+            image: "owo",
           });
           const selectedProfessions = Array.isArray(req.body.Professions)
                     ? req.body.Professions
                     : [req.body.Professions];
 
                 for (const professionId of selectedProfessions) {
-                    const profesion = await db.Profesiones.findByPk(parseInt(professionId));
+                    const profesion = await db.Professions.findByPk(parseInt(professionId));
 
                     if (profesion) {
                         // Asociar las categorías al producto creado
-                        await AspiranteNuevo.addProfesiones(profesion);
-                        console.log(`Profesion ${profesion.nombre} asociada al aspirante nuevo.`);
+                        await AspiranteNuevo.addProfessions(profesion);
+                        console.log(`Profesion ${profesion.name} asociada al aspirante nuevo.`);
                     } else {
                         console.log(`No se encontró la profesión con ID ${professionId}.`);
                     }
@@ -152,31 +145,31 @@ const controller = {
 
         if (resultValidation.errors.length > 0) {
             const id = req.params.id;
-            db.Aspirante.findByPk(id, { raw: true })
-                .then((result) => {
-                    const mergedData = {
-                        ...result,
-                        ...req.body,
-                    };
-                    console.log("ERRORRRRRRRRRRRRRRRRRRRRRRRRRRRR*************************")
-                    res.render(path.join(__dirname, "../views/admin/editProduct.ejs"), {
-                        errors: resultValidation.mapped(),
-                        oldData: req.body,
-                        productToEdit: mergedData,
-
-                    });
-                })
+            const result = await db.Aspirante.findByPk(id, { raw: true })
+            const mergedData = {
+                ...result,
+                ...req.body,
+            };
+            
+            console.log("ERRORRRRRRRRRRRRRRRRRRRRRRRRRRRR*************************")
+            res.render(path.join(__dirname, "../views/admin/editProduct.ejs"), {
+                errors: resultValidation.mapped(),
+                oldData: req.body,
+                productToEdit: mergedData,
+            });
         } else {
             const professionId = req.params.id;
             // const productImage = req.file ? req.file.filename : "producto.png"; 
-            const gettedApplicant = await db.Aspirante.findByPk(professionId,
+            const gettedApplicant = await db.Applicants.findByPk(professionId,
                 {
                     include: [
-                        // {association: 'genders'},
-                        {association: 'profesiones'}
+                        {association: 'genders'},
+                        {association: 'professions'}
                     ]
                 });
+            console.log("---------------------------------------------------");
             console.log("PARAMETROS DE EDIT",req.body);
+            console.log("USER",gettedApplicant);
             let productImage;
             if (req.file) {
                 productImage = req.file.filename;
@@ -185,17 +178,20 @@ const controller = {
             }
             const datosFormulario = req.body
             try {
+                // await gettedApplicant.update({
+                //     dni: datosFormulario.dni,
+                //     nombre: datosFormulario.name,
+                //     apellido: datosFormulario.last_name,
+                //     genero: datosFormulario.gender,
+                //     fechaNacimiento: datosFormulario.birth_date,
+                //     email: datosFormulario.email,
+                //     telefono: datosFormulario.phone,
+                //     urlLinkedin: datosFormulario.url_linkedin,
+                //     gender_id: datosFormulario.gender_id,
+                //     imagen: "owo",
+                // });
                 await gettedApplicant.update({
-                    dni: datosFormulario.dni,
-                    nombre: datosFormulario.nombre,
-                    apellido: datosFormulario.apellido,
-                    genero: datosFormulario.genero,
-                    fechaNacimiento: datosFormulario.fechaNacimiento,
-                    email: datosFormulario.email,
-                    telefono: datosFormulario.telefono,
-                    urlLinkedin: datosFormulario.urlLinkedin,
-                    imagen: "owo",
-                    updatedAt: new Date(),
+                    ...datosFormulario
                 });
                 
                 const selectedProfessions = Array.isArray(req.body.Professions)
@@ -203,14 +199,14 @@ const controller = {
                     : [req.body.Professions];
                 
                 // Obtener las profesiones asociadas actualmente al aspirante
-                const currentProfessions = await gettedApplicant.getProfesiones();
+                const currentProfessions = await gettedApplicant.getProfessions();
                 console.log(currentProfessions)
                 
                 // Eliminar las profesiones que no vienen en la solicitud de actualización
                 for (const profession of currentProfessions) {
                     console.log("ESTA EN LAS PROFESIONES?:",!selectedProfessions.includes(profession.id.toString()))
                     if (!selectedProfessions.includes(profession.id.toString())) {
-                        await gettedApplicant.removeProfesiones(profession);
+                        await gettedApplicant.removeProfessions(profession);
                         console.log(`Profesion ${profession.nombre} eliminada del aspirante actualizado.`);
                     }
                 }
@@ -218,22 +214,22 @@ const controller = {
                 
                 // Asociar las nuevas profesiones enviadas en la solicitud
                 for (const professionId of selectedProfessions) {
-                    const profesion = await db.Profesiones.findByPk(parseInt(professionId));
+                    const profesion = await db.Professions.findByPk(parseInt(professionId));
                 
                     if (profesion) {
                         // Asociar las categorías al producto actualizado
-                        await gettedApplicant.addProfesiones(profesion);
-                        console.log(`Profesion ${profesion.nombre} asociada al aspirante actualizado.`);
+                        await gettedApplicant.addProfessions(profesion);
+                        console.log(`Profesion ${profesion.name} asociada al aspirante actualizado.`);
                     } else {
                         console.log(`No se encontró la profesión con ID ${professionId}.`);
                     }
                 }
                 
-                const updatedApplicant = await db.Aspirante.findByPk(professionId,
+                const updatedApplicant = await db.Applicants.findByPk(professionId,
                     {
                         include: [
-                            // {association: 'genders'},
-                            {association: 'profesiones'}
+                            {association: 'genders'},
+                            {association: 'professions'}
                         ]
                     });
 
@@ -259,7 +255,7 @@ const controller = {
     },
     removeApplicant: async (req, res) => {
         try {
-            db.Aspirante.destroy({
+            db.Applicants.destroy({
                 where: {
                     id: req.params.id,
                 },
@@ -281,10 +277,10 @@ const controller = {
        }
     },
     applicants: async (req, res) => {
-        const applicants = await db.Aspirante.findAll({
+        const applicants = await db.Applicants.findAll({
             include: [
-                // {association: 'genders'},
-                {association: 'profesiones'}
+                {association: 'genders'},
+                {association: 'professions'}
             ]
         })
         return res.status(200).json({
@@ -298,12 +294,12 @@ const controller = {
     },
     profession: async (req, res) => {
         const id = req.params.id
-        const profession = await db.Profesiones.findByPk(
+        const profession = await db.Professions.findByPk(
             id,
             {
                 include: [
                     // {association: 'genders'},
-                    {association: 'aspirantes'}
+                    {association: 'applicants'}
                 ]
             }
         )
@@ -318,10 +314,8 @@ const controller = {
     addProfession: async (req, res) => {
         const datosFormulario = req.body
         console.log("DATOS SON",datosFormulario)
-        const ProfesionNueva = await db.Profesiones.create({
-            nombre: datosFormulario.nombre,
-            createdAt:  new Date(),
-            updatedAt: new Date(),
+        const ProfesionNueva = await db.Professions.create({
+            name: datosFormulario.name
           });
 
           return res.status(200).json({
@@ -341,30 +335,25 @@ const controller = {
 
         if (resultValidation.errors.length > 0) {
             const id = req.params.id;
-            db.Profesiones.findByPk(id, { raw: true })
-                .then((result) => {
-                    const mergedData = {
-                        ...result,
-                        ...req.body,
-                    };
-                    console.log("ERRORRRRRRRRRRRRRRRRRRRRRRRRRRRR*************************")
-                    res.render(path.join(__dirname, "../views/admin/editProduct.ejs"), {
-                        errors: resultValidation.mapped(),
-                        oldData: req.body,
-                        productToEdit: mergedData,
+            const result = await db.Profesiones.findByPk(id, { raw: true })
+            const mergedData = {
+                ...result,
+                ...req.body,
+            };
+            res.render(path.join(__dirname, "../views/admin/editProduct.ejs"), {
+                errors: resultValidation.mapped(),
+                oldData: req.body,
+                productToEdit: mergedData,
 
-                    });
-                })
+            });
         } else {
             const professionId = req.params.id;
-            // const productImage = req.file ? req.file.filename : "producto.png"; 
-            const gettedProfession = await db.Profesiones.findByPk(professionId);
+            const gettedProfession = await db.Professions.findByPk(professionId);
             console.log("PARAMETROS DE EDIT",req.body);
             const datosFormulario = req.body
             try {
                  await gettedProfession.update({
-                    nombre: datosFormulario.nombre,
-                    updatedAt: new Date(),
+                    ...datosFormulario
                 }, {
                     where: {
                         id: professionId,
@@ -390,7 +379,7 @@ const controller = {
     },
     removeProfession: async (req, res) => {
         try {
-            db.Profesiones.destroy({
+            db.Professions.destroy({
                 where: {
                     id: req.params.id,
                 },
@@ -412,11 +401,10 @@ const controller = {
        }
     },
     professions: async (req, res) => {
-        const professions = await db.Profesiones.findAll(
+        const professions = await db.Professions.findAll(
             {
                 include: [
-                    // {association: 'genders'},
-                    {association: 'aspirantes'}
+                    {association: 'applicants'}
                 ]
             }
         )

@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom'
 import Layout from './components/Layout'
 import Home from './pages/Home'
 import Applicants from './pages/Applicants'
+import Profile from './pages/Profile'
 import Contact from './pages/Contact'
 import Enterprise from './pages/Enterprise'
 import Inscribe from './pages/Inscribe'
@@ -14,7 +15,6 @@ const router = createBrowserRouter([
     children:[
         {
             index:true,
-            // path:'/',
             element:<Home/>
         },
         {
@@ -24,6 +24,10 @@ const router = createBrowserRouter([
         {
             path:'/applicants',
             element:<Applicants/>
+        },
+        {
+            path:'/applicants/:id',
+            element:<Profile/>
         },
         {
             path:'/professions',
