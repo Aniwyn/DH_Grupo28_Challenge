@@ -1,5 +1,7 @@
 import {Link,Outlet} from 'react-router-dom'
 
+
+
 function Layout() {
   return (
     <div style={{fontFamily: 'Rubik, sans-serif'}} className='flex'>
