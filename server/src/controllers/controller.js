@@ -37,6 +37,22 @@ const controller = {
             updatedAt: new Date(),
           });
 
+          const selectedProfessions = Array.isArray(req.body.Professions)
+                    ? req.body.Professions
+                    : [req.body.Professions];
+
+                for (const professionId of selectedProfessions) {
+                    const profesion = await db.Profesiones.findByPk(parseInt(professionId));
+
+                    if (profesion) {
+                        // Asociar las categorías al producto creado
+                        await AspiranteNuevo.addProfesiones(profesion);
+                        console.log(`Profesion ${profesion.nombre} asociada al aspirante nuevo.`);
+                    } else {
+                        console.log(`No se encontró la profesión con ID ${professionId}.`);
+                    }
+                }
+
           return res.status(200).json({
             meta: {
                 url: req.protocol + '://' + req.get('host') + req.url,
@@ -71,7 +87,13 @@ const controller = {
         } else {
             const professionId = req.params.id;
             // const productImage = req.file ? req.file.filename : "producto.png"; 
-            const gettedProfession = await db.Aspirante.findByPk(professionId);
+            const gettedApplicant = await db.Aspirante.findByPk(professionId,
+                {
+                    include: [
+                        // {association: 'genders'},
+                        {association: 'profesiones'}
+                    ]
+                });
             console.log("PARAMETROS DE EDIT",req.body);
             let productImage;
             if (req.file) {
@@ -81,8 +103,8 @@ const controller = {
             }
             const datosFormulario = req.body
             try {
-                 await gettedProfession.update({
-                    dni:datosFormulario.dni,
+                await gettedApplicant.update({
+                    dni: datosFormulario.dni,
                     nombre: datosFormulario.nombre,
                     apellido: datosFormulario.apellido,
                     genero: datosFormulario.genero,
@@ -92,19 +114,47 @@ const controller = {
                     urlLinkedin: datosFormulario.urlLinkedin,
                     imagen: "owo",
                     updatedAt: new Date(),
-                }, {
-                    where: {
-                        id: professionId,
-                    },
                 });
-
+                
+                const selectedProfessions = Array.isArray(req.body.Professions)
+                    ? req.body.Professions
+                    : [req.body.Professions];
+                
+                // Obtener las profesiones asociadas actualmente al aspirante
+                const currentProfessions = await gettedApplicant.getProfesiones();
+                console.log(currentProfessions)
+                
+                // Eliminar las profesiones que no vienen en la solicitud de actualización
+                for (const profession of currentProfessions) {
+                    console.log("ESTA EN LAS PROFESIONES?:",!selectedProfessions.includes(profession.id.toString()))
+                    if (!selectedProfessions.includes(profession.id.toString())) {
+                        await gettedApplicant.removeProfesiones(profession);
+                        console.log(`Profesion ${profession.nombre} eliminada del aspirante actualizado.`);
+                    }
+                }
+                console.log("TRAS ELIMINAR QUEDA",currentProfessions)
+                
+                // Asociar las nuevas profesiones enviadas en la solicitud
+                for (const professionId of selectedProfessions) {
+                    const profesion = await db.Profesiones.findByPk(parseInt(professionId));
+                
+                    if (profesion) {
+                        // Asociar las categorías al producto actualizado
+                        await gettedApplicant.addProfesiones(profesion);
+                        console.log(`Profesion ${profesion.nombre} asociada al aspirante actualizado.`);
+                    } else {
+                        console.log(`No se encontró la profesión con ID ${professionId}.`);
+                    }
+                }
+                
                 return res.status(200).json({
                     meta: {
                         url: req.protocol + '://' + req.get('host') + req.url,
                         status: 200,
                     },
-                    data: gettedProfession,
-                })
+                    data: gettedApplicant,
+                });
+                
             } catch (error) {
                 return res.status(403).json({
                     meta: {
