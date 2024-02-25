@@ -21,8 +21,91 @@ const controller = {
         })
     },
     addApplicant: async (req, res) => {
+        
+        let transaction;
+        try {
+            // Iniciar una transacción
+            transaction = await db.sequelize.transaction();
+            
+            let productImage;
+            if (req.file) {
+                productImage = req.file.filename;
+            } else {
+                productImage = "producto.jpg";
+            }
+            const datosFormulario = req.body;
+            console.log("DATOS SON", datosFormulario, req.file);
+            
+            const AspiranteNuevo = await db.Aspirante.create({
+                dni: datosFormulario.dni,
+                nombre: datosFormulario.nombre,
+                apellido: datosFormulario.apellido,
+                genero: datosFormulario.genero,
+                fechaNacimiento: datosFormulario.fechaNacimiento,
+                email: datosFormulario.email,
+                telefono: datosFormulario.telefono,
+                urlLinkedin: datosFormulario.urlLinkedin,
+                imagen: productImage,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            }, { transaction });
+    
+            const selectedProfessions = Array.isArray(req.body.Professions)
+                ? req.body.Professions
+                : [req.body.Professions];
+    
+                for (const professionId of selectedProfessions) {
+                    // Verificar si professionId es un número válido
+                    if (!isNaN(professionId)) {
+                        const id = parseInt(professionId);
+                        const profesion = await db.Profesiones.findByPk(id, { transaction });
+                
+                        if (profesion) {
+                            // Asociar las profesiones al aspirante nuevo
+                            await AspiranteNuevo.addProfesiones(profesion, { transaction });
+                            console.log(`Profesion ${profesion.nombre} asociada al aspirante nuevo.`);
+                        } else {
+                            console.log(`No se encontró la profesión con ID ${id}.`);
+                        }
+                    } else {
+                        console.log(`ID de profesión inválido: ${professionId}`);
+                    }
+                }
+                
+    
+            // Commit (confirmar) la transacción si todas las operaciones se completaron con éxito
+            await transaction.commit();
+    
+            return res.status(200).json({
+                meta: {
+                    url: req.protocol + '://' + req.get('host') + req.url,
+                    status: 200,
+                },
+                data: AspiranteNuevo,
+            });
+        } catch (error) {
+            // Si se produce un error, revertir (rollback) la transacción
+            if (transaction) await transaction.rollback();
+    
+            console.log(error);
+            return res.status(403).json({
+                meta: {
+                    url: req.protocol + '://' + req.get('host') + req.url,
+                    status: 403,
+                    error: error,
+                }
+            });
+        }
+    }, 
+    addApplicantA: async (req, res) => {
         const datosFormulario = req.body
-        console.log("DATOS SON",datosFormulario)
+        console.log("DATOS SON",datosFormulario, req.file)
+        let productImage;
+        if (req.file) {
+            productImage = req.file.filename;
+        } else {
+            productImage = "producto.jpg";
+        }
         const AspiranteNuevo = await db.Aspirante.create({
             dni:datosFormulario.dni,
             nombre: datosFormulario.nombre,
@@ -32,11 +115,10 @@ const controller = {
             email: datosFormulario.email,
             telefono: datosFormulario.telefono,
             urlLinkedin: datosFormulario.urlLinkedin,
-            imagen: "owo",
+            imagen: productImage,
             createdAt: new Date(),
             updatedAt: new Date(),
           });
-
           const selectedProfessions = Array.isArray(req.body.Professions)
                     ? req.body.Professions
                     : [req.body.Professions];

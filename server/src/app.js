@@ -10,6 +10,8 @@ require('dotenv').config({path: `${__dirname}/config.env` });
 app.use(express.json()); // Para analizar datos en formato JSON
 app.use(express.urlencoded({ extended: true })); // Para analizar datos en formato x-www-form-urlencoded
 
+/*  STATIC FILES * /
+app.use(express.static("public"));
 
 /* PUBLIC SETTING */
 app.use(express.static("public"));
