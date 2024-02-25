@@ -1,6 +1,8 @@
+import { Link } from "react-router-dom"
+
 const ApplicantCard = ({ applicant })  => {
     return(
-        <a className="flex flex-col bg-white shadow-lg rounded-lg lg:m-2 md:m-0 lg:w-[30%] md:w-[50%] w-[100%] hover:bg-gray-100" href="/#">
+        <Link className="flex flex-col bg-white shadow-lg rounded-lg lg:m-2 md:m-0 lg:w-[30%] md:w-[50%] w-[100%] hover:bg-gray-100" to={`/applicants/${applicant.id}`}>
             <div className="text-center border-b py-5 flex-grow">
                 <img src={`/img/${applicant.image}`} className="h-[100px] mb-4 rounded-full mx-auto" alt="" />
                 <h4 className="font-bold text-gray-600">{applicant.name} {applicant.last_name}</h4>
@@ -15,7 +17,7 @@ const ApplicantCard = ({ applicant })  => {
                 <img src="/icons/bubble-chat.png" className="h-6 opacity-75 cursor-pointer" alt="" />
                 <img src="/icons/email.png" className="h-6 opacity-75 cursor-pointer" alt="" />
             </div>
-        </a>
+        </Link>
     )
 }
 

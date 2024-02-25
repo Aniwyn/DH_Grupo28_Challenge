@@ -203,7 +203,7 @@ const controller = {
     applicants: async (req, res) => {
         const applicants = await db.Applicants.findAll({
             include: [
-                {association: 'genders'}
+                {association: 'genders'},
                 {association: 'professions'}
             ]
         })
@@ -328,8 +328,7 @@ const controller = {
         const professions = await db.Professions.findAll(
             {
                 include: [
-                    {association: 'genders'},
-                    {association: 'applicats'}
+                    {association: 'applicants'}
                 ]
             }
         )

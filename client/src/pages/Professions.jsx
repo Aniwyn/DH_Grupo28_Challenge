@@ -9,21 +9,18 @@ function Professions() {
   useEffect(() => {
     professionsService
       .getAll()
-      .then(professions => setApplicants(professions))
+      .then(professions => setProfessions(professions))
       .catch(error => console.error(error))
   }, [])
 
   return (
-    <div className="bg-gray-100 h-full w-full px-7 pt-6">
+    <div className="flex flex-col bg-gray-100 h-full w-full px-7 pt-6">
       <h1 className="text-gray-600 text-2xl">Profesiones</h1>
-      <ul className="w-[1000px] bg-white rounded-lg">
+      <ul className="w-[750px] bg-white rounded-lg self-center">
         <li className="text-center text-white bg-blue-600 rounded-t-lg font-bold text-lg py-2 mt-2">Listado de profesiones</li>
         {professions.data.map(profession => {
-          <ProfessionLabel key={profession.id} profession={profession.name}></ProfessionLabel>
+          return <ProfessionLabel key={profession.id} profession={profession.name}></ProfessionLabel>
         })}
-        <li className="text-center text-gray-700 border-b border-x text-lg py-2 cursor-pointer hover:bg-gray-50">Abogado</li>
-        <li className="text-center text-gray-700 border-b border-x text-lg py-2 cursor-pointer hover:bg-gray-50">Arquitecto</li>
-        <li className="text-center text-gray-700 border-b border-x text-lg py-2 cursor-pointer hover:bg-gray-50">Botánico</li>
       </ul>
     </div>
   )
