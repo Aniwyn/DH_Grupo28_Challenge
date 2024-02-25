@@ -4,7 +4,6 @@ const router = express.Router();
 const controller = require('../controllers/controller');
 
 router.get('/applicants', controller.applicants); // List all
-
 router.get('/applicant/:id', controller.applicant); // Read one
 
 // ASPIRANTES

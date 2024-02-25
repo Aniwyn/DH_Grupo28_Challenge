@@ -47,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
         tableName: "applicants",
     });
 
-    // Relación con la tabla User
+    // Relación con la tabla Applicants
     Applicants.associate = (models) => {
         Applicants.belongsTo(models.Genders, { 
             as:"genders",
@@ -55,11 +55,11 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: 'gender_id'
          })
 
-         Applicants.belongsToMany(models.Proffesions, {
+         Applicants.belongsToMany(models.Professions, {
             as: 'professions',
-            through: 'applicants_proffesions',
+            through: 'applicants_professions',
             foreignKey: 'applicants_id',
-            otherKey: 'proffesions_id',
+            otherKey: 'professions_id',
             timestamps: false
          })
     }

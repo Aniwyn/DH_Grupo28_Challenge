@@ -199,10 +199,11 @@ const controller = {
        }
     },
     applicants: async (req, res) => {
-        const applicants = await db.Aspirante.findAll({
+        console.log("asd")
+        const applicants = await db.Applicants.findAll({
             include: [
                 // {association: 'genders'},
-                {association: 'profesiones'}
+                {association: 'professions'}
             ]
         })
         return res.status(200).json({
@@ -330,11 +331,11 @@ const controller = {
        }
     },
     professions: async (req, res) => {
-        const professions = await db.Profesiones.findAll(
+        const professions = await db.Professions.findAll(
             {
                 include: [
-                    // {association: 'genders'},
-                    {association: 'aspirantes'}
+                    {association: 'genders'},
+                    {association: 'applicats'}
                 ]
             }
         )
