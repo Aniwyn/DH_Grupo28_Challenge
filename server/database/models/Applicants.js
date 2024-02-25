@@ -55,11 +55,11 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: 'gender_id'
          })
 
-         Applicants.belongsToMany(models.Proffesions, {
+         Applicants.belongsToMany(models.Professions, {
             as: 'professions',
-            through: 'applicants_proffesions',
+            through: 'applicants_professions',
             foreignKey: 'applicants_id',
-            otherKey: 'proffesions_id',
+            otherKey: 'professions_id',
             timestamps: false
          })
     }

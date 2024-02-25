@@ -17,11 +17,11 @@ module.exports = (sequelize, DataTypes) => {
     });
     
     Professions.associate = (models) => {
-        Profesion.belongsToMany(models.Applicants, { 
+        Professions.belongsToMany(models.Applicants, { 
             as:"applicants",
-            through: "applicants_proffesions",
+            through: "applicants_professions",
             onDelete: 'CASCADE', 
-            foreignKey: 'proffesions_id',
+            foreignKey: 'professions_id',
             otherKey: 'applicants_id',
             timestamps: false,
          });
