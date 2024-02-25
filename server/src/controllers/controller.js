@@ -147,19 +147,29 @@ const controller = {
                     }
                 }
                 
+                const updatedApplicant = await db.Aspirante.findByPk(professionId,
+                    {
+                        include: [
+                            // {association: 'genders'},
+                            {association: 'profesiones'}
+                        ]
+                    });
+
                 return res.status(200).json({
                     meta: {
                         url: req.protocol + '://' + req.get('host') + req.url,
                         status: 200,
                     },
-                    data: gettedApplicant,
+                    data: updatedApplicant,
                 });
                 
             } catch (error) {
+                console.log(error)
                 return res.status(403).json({
                     meta: {
                         url: req.protocol + '://' + req.get('host') + req.url,
                         status: 403,
+                        error:error,
                     }
                 })
             }
