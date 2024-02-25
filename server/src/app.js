@@ -21,6 +21,6 @@ app.use("/api/",routes)
 
 
 /* SERVER LISTEN */
-app.listen(4000, () => {
+app.listen(process.env.PORT || 4000, () => {
     console.log(`[server] corriendo en el puerto ${process.env.PORT} (http://localhost:${process.env.PORT}/)`);
 })

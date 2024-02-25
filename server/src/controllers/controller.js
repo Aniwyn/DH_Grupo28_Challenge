@@ -3,11 +3,11 @@ let db = require('../../database/models')
 const controller = {
     applicant: async (req, res) => {
         const id = req.params.id
-        const applicant = await db.Aspirante.findByPk(
+        const applicant = await db.Applicants.findByPk(
             id,
             {
                 include: [
-                        {association: 'profesiones'}
+                        {association: 'proffesions'}
                     ]
                 }
                 
