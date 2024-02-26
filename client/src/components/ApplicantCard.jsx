@@ -6,7 +6,7 @@ const ApplicantCard = ({ applicant })  => {
             <div className="text-center border-b py-5 flex-grow">
                 <img src={`http://localhost:3213/img/${applicant.image}`} className="h-[100px] mb-4 rounded-full mx-auto" alt="" />
                 <h4 className="font-bold text-gray-600">{applicant.name} {applicant.last_name}</h4>
-                <div className="flex flex-col tems-center">
+                <div className="flex flex-col items-center ">
                     {applicant.professions.map((profession, i) => {
                         return <p className="text-gray-600" key={`${profession.id}-${i}`}>{profession.name}</p>
                     })}

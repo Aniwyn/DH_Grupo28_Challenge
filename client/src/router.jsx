@@ -7,6 +7,7 @@ import Contact from './pages/Contact'
 import Enterprise from './pages/Enterprise'
 import Inscribe from './pages/Inscribe'
 import Professions from './pages/Professions'
+import Update from './pages/Update'
 import DeleteApplicant from './components/DeleteApplicant'
 
 const router = createBrowserRouter([
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
         {
             path:'/contact',
             element:<Contact/>
+        },
+        {
+            path:'/applicants/update/:id',
+            element:<Update/>
         }
     ]
   }

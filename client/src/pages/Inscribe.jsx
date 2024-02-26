@@ -1,9 +1,24 @@
+import React, { useState, useEffect } from 'react'
+
+import professionsService from '../services/professionsService'
+
 function Inscribe() {
+
+  const [professions, setProfessions] = useState({ data: [] })
+
+  useEffect(() => {
+    professionsService
+      .getAll()
+      .then(professions => setProfessions(professions))
+      .catch(error => console.error(error))
+  }, [])
+
+
   return (
     <div className="px-8 pt-5">
       <h1 className="font-bold text-blue-900 text-lg">Añade un aspirante aquí...</h1>
       {/* <div className="w-100 h-[1px] bg-gray-300 my-4"></div> */}
-      <form action="http://localhost:3213/api/applicant" method="post" enctype="multipart/form-data" className="flex flex-col justify-s w-full space-y-2 font- text-sm text-slate-600">
+      <form action="http://localhost:3213/api/applicants" method="post" enctype="multipart/form-data" className="flex flex-col justify-s w-full space-y-2 font- text-sm text-slate-600">
         <h2 className="mt-2 font-medium text-slate-600 text-md">Datos personales</h2>
         <div className="w-100 h-[0.5px] bg-gray-300 my-2 "></div>
         <div className="flex flex-row w-full">
@@ -32,7 +47,7 @@ function Inscribe() {
         </div>
         <div className="flex flex-row w-full">
           <label htmlFor="birth_date" className="w-1/5">Fecha de nacimiento</label>
-          <input id="birth_date" name="birth_date" type="date"className="w-1/2 border px-1 rounded-sm px-2 py-1 placeholder:ml-5 hover:border-gray-400" />
+          <input id="birth_date" name="birth_date" type="date" className="w-1/2 border px-1 rounded-sm px-2 py-1 placeholder:ml-5 hover:border-gray-400" />
         </div>
         <div className="flex flex-row w-full">
           <label htmlFor="email" className="w-1/5">Correo electrónico</label>
@@ -55,14 +70,18 @@ function Inscribe() {
           text-xs" />
         </div>
         <div className="flex flex-row w-full pb-4">
-          <label htmlFor="profesion" className="w-1/5">Profesión</label>
-          <select id="alternativas" name="alternativas" className="w-1/2 border px-1 rounded-sm py-1 placeholder:ml-5 hover:border-gray-400">
-            <option value="Abogado">Abogado</option>
-            <option value="arquitecto">Arquitecto</option>
-            <option value="otro">Otro</option>
-          </select><br></br>
+          <label htmlFor="Professions" className="w-1/5">Profesión</label>
+
+          <div className='flex flex-col'>
+          {professions.data.map(profession => (
+            <div key={profession.id} className="flex items-center">
+              <input type="checkbox" id={`profession_${profession.id}`} name="Professions" value={profession.id} className="mr-2 cursor-pointer" />
+              <label htmlFor={`profession_${profession.id}`} className='cursor-pointer'>{profession.name}</label>
+            </div>
+          ))}
+          </div>
         </div>
-        <input type="submit" className="flex justify-center w-1/4 h-8 bg-blue-700 rounded text-white cursor-pointer transition-all duration-500 hover:bg-blue-900"/>
+        <input type="submit" className="flex justify-center w-1/4 h-8 bg-blue-700 rounded text-white cursor-pointer transition-all duration-500 hover:bg-blue-900" />
       </form>
     </div>
   )
