@@ -1,6 +1,5 @@
 import axios from 'axios'
-const baseUrl = 'http://localhost:3213/api/applicants'
-
+const baseUrl = `${import.meta.env.VITE_SERVER}/api/applicants`
 const getAll = async () => {
     const request = axios.get(`${baseUrl}`)
     const response = await request

@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = 'http://localhost:3213/api/professions'
+const baseUrl = `${import.meta.env.VITE_SERVER}/api/professions`
 
 const getAll = async () => {
     const request = axios.get(`${baseUrl}`)
