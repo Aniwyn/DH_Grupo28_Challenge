@@ -174,7 +174,9 @@ const controller = {
             let productImage;
             if (req.file) {
                 productImage = req.file.filename;
-            } else {
+            } else if (gettedApplicant.image) {
+                productImage = gettedApplicant.image;
+            }else{
                 productImage = "logo-dh.png";
             }
             const datosFormulario = req.body
