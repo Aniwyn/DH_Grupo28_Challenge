@@ -7,11 +7,11 @@ const controller = {
             id,
             {
                 include: [
-                        {association: 'professions'}
-                    ]
-                }
-                
-                )
+                    {association: 'genders'},
+                    {association: 'professions'}
+                ]
+            }
+        )
         return res.status(200).json({
             meta: {
                 url: req.protocol + '://' + req.get('host') + req.url,
