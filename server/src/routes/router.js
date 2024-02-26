@@ -22,7 +22,7 @@ router.get('/applicants/:id', controller.applicant); // Read one
 
 // ASPIRANTES
 router.post('/applicants/',uploadFile.single("image"), controller.addApplicant); // Create
-router.post('/applicants/update/:id', controller.updateApplicant); // Update
+router.post('/applicants/update/:id',uploadFile.single("image"), controller.updateApplicant); // Update
 router.delete('/applicants/delete/:id', controller.removeApplicant); // Delete
 // router.post('/updateApplicant/:id', controller.applicant);
 
