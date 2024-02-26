@@ -119,21 +119,21 @@ const controller = {
             image: productImage,
           });
 
-        //   const selectedProfessions = Array.isArray(req.body.Professions)
-        //             ? req.body.Professions
-        //             : [req.body.Professions];
+          const selectedProfessions = Array.isArray(req.body.Professions)
+                    ? req.body.Professions
+                    : [req.body.Professions];
 
-        //         for (const professionId of selectedProfessions) {
-        //             const profesion = await db.Professions.findByPk(parseInt(professionId));
+                for (const professionId of selectedProfessions) {
+                    const profesion = await db.Professions.findByPk(parseInt(professionId));
 
-        //             if (profesion) {
-        //                 // Asociar las categorías al producto creado
-        //                 await AspiranteNuevo.addProfessions(profesion);
-        //                 console.log(`Profesion ${profesion.name} asociada al aspirante nuevo.`);
-        //             } else {
-        //                 console.log(`No se encontró la profesión con ID ${professionId}.`);
-        //             }
-        //         }
+                    if (profesion) {
+                        // Asociar las categorías al producto creado
+                        await AspiranteNuevo.addProfessions(profesion);
+                        console.log(`Profesion ${profesion.name} asociada al aspirante nuevo.`);
+                    } else {
+                        console.log(`No se encontró la profesión con ID ${professionId}.`);
+                    }
+                }
 
         return res.redirect(req.get('referer')+"applicants");
       },

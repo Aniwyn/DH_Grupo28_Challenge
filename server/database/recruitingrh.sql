@@ -198,8 +198,8 @@ ALTER TABLE `applicants`
 -- Filtros para la tabla `applicants_professions`
 --
 ALTER TABLE `applicants_professions`
-  ADD CONSTRAINT `applicants_professions_ibfk_1` FOREIGN KEY (`applicants_id`) REFERENCES `applicants` (`id`),
-  ADD CONSTRAINT `applicants_professions_ibfk_2` FOREIGN KEY (`professions_id`) REFERENCES `professions` (`id`);
+  ADD CONSTRAINT `applicants_professions_ibfk_1` FOREIGN KEY (`applicants_id`) REFERENCES `applicants` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `applicants_professions_ibfk_2` FOREIGN KEY (`professions_id`) REFERENCES `professions` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
