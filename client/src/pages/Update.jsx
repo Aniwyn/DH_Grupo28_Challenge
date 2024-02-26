@@ -94,7 +94,7 @@ function Inscribe() {
     formData.append('image', selectedImage); // Aquí agregamos la imagen al FormData
   
     try {
-      const response = await axios.post(`http://localhost:3213/api/applicants/update/${id}`, formData, {
+      const response = await axios.post(`${import.meta.env.VITE_SERVER}/api/applicants/update/${id}`, formData, {
         headers: {
           Accept:'application/json',
           'Content-Type': 'multipart/form-data', // Es importante establecer el encabezado adecuado para enviar archivos
