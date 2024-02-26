@@ -10,7 +10,7 @@ const ApplicantCard = ({ applicant })  => {
                     {applicant.professions.map((profession, i) => {
                         return <p className="text-gray-600" key={`${profession.id}-${i}`}>{profession.name}</p>
                     })}
-                </div>       
+                </div>
             </div>
             <div className="flex justify-between py-5 px-10">
                 <img src="/icons/star.png" className="h-6 opacity-75 cursor-pointer" alt="" />

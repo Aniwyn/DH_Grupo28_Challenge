@@ -7,6 +7,7 @@ import Contact from './pages/Contact'
 import Enterprise from './pages/Enterprise'
 import Inscribe from './pages/Inscribe'
 import Professions from './pages/Professions'
+import DeleteApplicant from './components/DeleteApplicant'
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
         {
             path:'/applicants/:id',
             element:<Profile/>
+        },
+        {
+            path:'/applicants/delete/:id',
+            element:<DeleteApplicant/>
         },
         {
             path:'/professions',
