@@ -14,14 +14,14 @@ app.use(express.urlencoded({ extended: true })); // Para analizar datos en forma
 /* PUBLIC SETTING */
 app.use(express.static("public"));
 app.use(cors({
-    origin: process.env.CLIENT,
+    origin: 'http://localhost:5173'
 }));
 /* ROUTING */
 app.use("/api/",routes)
 
 
 /* SERVER LISTEN */
-const PORT = process.env.PORT || 4000
+const PORT = 3213
 app.listen(PORT, () => {
     console.log(`[server] corriendo en el puerto ${PORT} (http://localhost:${PORT}/)`);
 })
