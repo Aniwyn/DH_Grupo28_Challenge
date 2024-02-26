@@ -6,7 +6,7 @@ const multer = require('multer');
 // Configuracion de multer
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, "./public/images/");
+        cb(null, "./public/img/");
     },
     filename: (req, file, cb) => {
         const nameFile = `applicant_${Date.now()}${path.extname(file.originalname)}`;
@@ -21,7 +21,7 @@ router.get('/applicants', controller.applicants); // List all
 router.get('/applicant/:id', controller.applicant); // Read one
 
 // ASPIRANTES
-router.post('/applicant/',uploadFile("image"), controller.addApplicant); // Create
+router.post('/applicant/',uploadFile.single("image"), controller.addApplicant); // Create
 router.post('/updateApplicant/:id', controller.updateApplicant); // Update
 router.post('/deleteApplicant/:id', controller.removeApplicant); // Delete
 // router.post('/updateApplicant/:id', controller.applicant);

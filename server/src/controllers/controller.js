@@ -101,7 +101,7 @@ const controller = {
         const datosFormulario = req.body
         console.log("DATOS SON",datosFormulario)
         const AspiranteNuevo = await db.Applicants.create({
-            dni:datosFormulario.dni,
+            dni:parseInt(datosFormulario.dni),
             name: datosFormulario.name,
             last_name: datosFormulario.last_name,
             gender: datosFormulario.gender,
@@ -113,21 +113,21 @@ const controller = {
             image: "owo",
           });
 
-          const selectedProfessions = Array.isArray(req.body.Professions)
-                    ? req.body.Professions
-                    : [req.body.Professions];
+        //   const selectedProfessions = Array.isArray(req.body.Professions)
+        //             ? req.body.Professions
+        //             : [req.body.Professions];
 
-                for (const professionId of selectedProfessions) {
-                    const profesion = await db.Professions.findByPk(parseInt(professionId));
+        //         for (const professionId of selectedProfessions) {
+        //             const profesion = await db.Professions.findByPk(parseInt(professionId));
 
-                    if (profesion) {
-                        // Asociar las categorías al producto creado
-                        await AspiranteNuevo.addProfessions(profesion);
-                        console.log(`Profesion ${profesion.name} asociada al aspirante nuevo.`);
-                    } else {
-                        console.log(`No se encontró la profesión con ID ${professionId}.`);
-                    }
-                }
+        //             if (profesion) {
+        //                 // Asociar las categorías al producto creado
+        //                 await AspiranteNuevo.addProfessions(profesion);
+        //                 console.log(`Profesion ${profesion.name} asociada al aspirante nuevo.`);
+        //             } else {
+        //                 console.log(`No se encontró la profesión con ID ${professionId}.`);
+        //             }
+        //         }
 
           return res.status(200).json({
             meta: {
