@@ -100,6 +100,12 @@ const controller = {
     addApplicant: async (req, res) => {
         const datosFormulario = req.body
         console.log("DATOS SON",datosFormulario)
+        let productImage;
+            if (req.file) {
+                productImage = req.file.filename;
+            } else {
+                productImage = "producto.jpg";
+            }
         const AspiranteNuevo = await db.Applicants.create({
             dni:parseInt(datosFormulario.dni),
             name: datosFormulario.name,
@@ -110,7 +116,7 @@ const controller = {
             phone: datosFormulario.phone,
             url_linkedin: datosFormulario.url_linkedin,
             gender_id: datosFormulario.gender_id,
-            image: "owo",
+            image: productImage,
           });
 
         //   const selectedProfessions = Array.isArray(req.body.Professions)
@@ -129,13 +135,7 @@ const controller = {
         //             }
         //         }
 
-          return res.status(200).json({
-            meta: {
-                url: req.protocol + '://' + req.get('host') + req.url,
-                status: 200,
-            },
-            data: AspiranteNuevo,
-        })
+        return res.redirect(req.get('referer')+"applicants");
       },
       updateApplicant: async (req, res) => {
         // const resultValidation = validationResult(req);
